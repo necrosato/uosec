@@ -1,0 +1,58 @@
+1. 
+    Download Kali Linux:
+        https://www.kali.org/downloads/
+    Check SHA256SUMS && SHA256SUMS.gpg:
+        brew install gpg
+        Get SHA256SUMS && SHA256SUMS.gpg:
+            http://cdimage.kali.org/current/ 
+        
+        Verify: (from https://www.kali.org/downloads/ )
+
+            $ wget -q -O - https://www.kali.org/archive-key.asc | gpg --import
+          # or...
+            $ gpg --keyserver hkp://keys.gnupg.net --recv-key 7D8D0BF6
+          # ...and verify that the displayed fingerprint matches the one below
+            $ gpg --fingerprint 7D8D0BF6
+            pub   rsa4096 2012-03-05 [SC] [expires: 2021-02-03]
+                  44C6 513A 8E4F B3D3 0875  F758 ED44 4FF0 7D8D 0BF6
+            uid           [ unknown] Kali Linux Repository <devel@kali.org>
+            sub   rsa4096 2012-03-05 [E] [expires: 2021-02-03]
+
+            Once you have downloaded both SHA256SUMS and SHA256SUMS.gpg, you can verify the signature as follows:
+
+            $ gpg --verify SHA256SUMS.gpg SHA256SUMS
+            gpg: Signature made Tue 13 Feb 2018 03:33:53 AM EST
+            gpg:                using RSA key 44C6513A8E4FB3D30875F758ED444FF07D8D0BF6
+            gpg: Good signature from "Kali Linux Repository <devel@kali.org>" [unknown]
+            gpg: WARNING: This key is not certified with a trusted signature!
+            gpg:          There is no indication that the signature belongs to the owner.
+            Primary key fingerprint: 44C6 513A 8E4F B3D3 0875  F758 ED44 4FF0 7D8D 0BF6
+            
+            If you don’t get that “Good signature” message or if the key ID doesn’t match, then you should stop the process and review whether you downloaded the images from a legitimate Kali mirror.
+
+            verification: 
+            $ shasum -a 256 -b *.iso
+
+
+Installation:
+    Open VirtualBox
+    New:
+        Name: Kali
+        Type: Linux
+        Version: Debian (64-bit)
+        Memory size: >= 2048 MB (or 25% of native RAM)
+        Create a virtual hard disk now
+        VDI
+        Dynamically allocated
+        20 GB
+    Settings:
+        Storage: 
+            Controller: IDESt
+                Choose virtual optical dive
+                Select ISO
+                Start
+        In Kali:
+            Install
+    
+
+

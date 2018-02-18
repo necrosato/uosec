@@ -1,0 +1,52 @@
+If you would like to set up a VirtualBox image on your own, here are the instructions. I can help you with this tomorrow if you’d like, but I don’t want to waste your time if you feel capable.
+
+First things first, we need to download and verify our image.
+
+To download:
+1. Go to https://linuxmint.com/edition.php?id=249 
+2. Click on one of the USA mirror links. I used the first one, advancedhosters.com. The download should begin automatically to your ~/Downloads/ folder.
+3. Go to https://linuxmint.com/verify.php
+4. Find sha256sum.txt, right click and ‘Download Linked File’. This should place it in ~/Downloads/.
+
+To Verify:
+1. Open a fresh terminal window. The following lines preceded by ‘$’ are terminal commands. I will explain each command.
+2. $ cd ~/Downloads
+	this takes you to your Downloads
+3. $ mkdir ISO
+	this makes a new directory called ISO
+4. $ mv sha256sum.txt* ISO
+	this places both sha256sum.txt in ISO
+5. $ mv linuxmint-18.3-xfce-64bit.iso ISO
+	this places the image in the ISO folder
+6. $ cd ISO
+7. $ shasum -a 256 -b *.iso
+	this will generate a crazy line
+8. $ cat sha256sum.txt
+	this will print 8 crazy lines, one should match
+
+To Install in VirtualBox:
+1. Launch VirtualBox
+2. Click the ‘New’ button (in the top left on mine).
+3. Set Name to ‘Mint’.
+4. Set Type to ‘Linux’.
+5. Set Version to ‘Ubuntu (64-bit)’.
+6. Set Memory size to 2048 MB
+7. Set Hard disk to ‘Create a virtual hard disk now’.
+8. Create
+Now in terminal:
+9. $ mv linuxmint-18.3-xfce-64bit.iso ~/VirtualBox\ VMs/Mint/
+	this places the .iso in the VirutalBox folder
+Back in VirtualBox
+10. Right-Click the Mint vm, select ‘Settings’.
+11. Click on ‘Storage on the top bar’
+12. Select the empty slot under ‘Controller: IDE’.
+13. On the side, change ‘IDE Secondary Master’ to ‘IDE Primary Master’
+14. Click the disk icon next to that and select the image
+15. Ok
+16. Start
+In the virtual machine:
+1. Double click ‘Install Linux Mint’.
+2. Continue, Continue, Install Now, Continue
+3. Select Time Zone & Keyboard
+4. Fill out credentials you want to use
+
