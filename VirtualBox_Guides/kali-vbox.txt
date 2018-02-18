@@ -53,6 +53,24 @@ Installation:
                 Start
         In Kali:
             Install
+            Follow prompts
     
+VBox Guest Additions:
+    apt-get update
+maybe:
+    rm /var/lib/dpkg/lock
+    apt-get install -y virtualbox-guest-x11
+    reboot
 
+    insert guest addition cd from virtualbox Devices dropdown menu
+
+    cp /media/cdrom/VBoxLinuxAdditions.run /root/
+    chmod 755 /root/VBoxLinuxAdditions.run
+    cd /root
+    ./VBoxLinuxAdditions.run
+    
+Shared Folder
+    Settings:
+        New folder, auto-mount
+    
 
