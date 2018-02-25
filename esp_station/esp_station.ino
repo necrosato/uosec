@@ -97,8 +97,9 @@ void setupWiFi()
   IPAddress ip(6,6,6,2);
   IPAddress gateway(6,6,6,1); 
   IPAddress subnet(255,255,255,0); 
-  WiFi.begin(ssid, password);
+  WiFi.mode(WIFI_STA);
   WiFi.config(ip, gateway, subnet);
+  WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
