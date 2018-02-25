@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>
-#include "pins_arduino.h"
+//#include "pins_arduino.h"
 //////////////////////
 // WiFi Definitions //
 //////////////////////
@@ -87,18 +87,25 @@ void loop()
 
 void setupWiFi()
 {
+  int wifiStatus;
+  Serial.println("\n");
+  Serial.print("This device's MAC address is: ");
+  Serial.println(WiFi.macAddress());
   WiFi.mode(WIFI_AP);
   IPAddress ip(6,6,6,1);
   IPAddress gateway(6,6,6,1); 
   IPAddress subnet(255,255,255,0); 
   WiFi.softAPConfig(ip, gateway, subnet);
   WiFi.softAP(AP_NAME, WiFiAPPSK, 6, 0);
+  wifiStatus = WiFi.status();
+  Serial.println("");
+  Serial.print("This AP's IP address is: ");
+  Serial.println(WiFi.softAPIP());  
 }
 
 void initHardware()
 {
   Serial.begin(115200);
-  Serial.print("\nstarting up:\n");
   pinMode(DIGITAL_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT); 
   digitalWrite(LED_PIN, HIGH);//on Lolin ESP8266 v3 dev boards, the led is active low
