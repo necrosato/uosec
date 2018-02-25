@@ -39,10 +39,12 @@ void loop()
         delay(3000);
         return;
     }
+    /*
     if (loop_count % 10 == 0) {
         setupWiFi();
         loop_count = 0;
     }
+    */
     // if we do not have a current connection with the server
     if (!client.connected()) {
         Serial.println("Attempting to connect to server");
@@ -95,8 +97,15 @@ void setupWiFi()
   Serial.print("This device's MAC address is: ");
   Serial.println(WiFi.macAddress());
   IPAddress ip(6,6,6,2);
+  IPAddress ip2(6,6,6,3);
   IPAddress gateway(6,6,6,1); 
   IPAddress subnet(255,255,255,0); 
+  //WiFi.mode(WIFI_AP_STA);
+  WiFi.softAPConfig(ip, ip, subnet);
+  WiFi.softAP(AP_NAME, WiFiAPPSK, 6, 0);
+  Serial.println("");
+  Serial.print("This AP's IP address is: ");
+  Serial.println(WiFi.softAPIP());  
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
 
