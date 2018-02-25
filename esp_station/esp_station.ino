@@ -76,7 +76,7 @@ void setupWiFi()
   IPAddress gateway(6,6,6,1); 
   IPAddress subnet(255,255,255,0); 
   //WiFi.mode(WIFI_STA);
-  //WiFi.config(ip, gateway, subnet);
+  WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
