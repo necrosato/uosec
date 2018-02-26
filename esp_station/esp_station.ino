@@ -3,13 +3,14 @@
 //////////////////////
 // WiFi Definitions //
 //////////////////////
-// other esp ep credentials
-const char *ssid = "uosec";
+// this esp's station credentials
+const char *ssid = "espnode";
 const char *password = "security123";
 
-// this esp's ap credentials
-const char AP_NAME[] = "uosec2";
-const char WiFiAPPSK[] = "security123";
+int wifiStatus;
+IPAddress ip(6,6,6,2);              // this node's ip
+IPAddress gateway(6,6,6,1);         // ap's ip address
+IPAddress subnet(255,255,255,0);    // ap's subnet mask
 
 /////////////////////
 // Pin Definitions //
@@ -18,105 +19,103 @@ const int LED_PIN = D4; // ESP's onboard, green LED
 const int ANALOG_PIN = A0; // The only analog pin on the ESP
 const int DIGITAL_PIN = D3; // Digital pin to be read
 
-int wifiStatus;
-IPAddress server(6,6,6,1);
-WiFiClient client;
-char buf[1024];
-String req_on = "GET /led/1 HTTP/1.1";
-String req_off = "GET /led/0 HTTP/1.1";
-
 void setup() 
 {
   initHardware();
   setupWiFi();
 }
 
-int loop_count = 0;
+int led_status = 0;
+char buf[1024];
+String req_on = "GET /led/1 HTTP/1.1";
+String req_off = "GET /led/0 HTTP/1.1";
 void loop() 
 {
     if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("lost connection to other esp, waiting for reconnection...");
+        Serial.println("lost connection to ap, waiting for reconnection...");
+        //setupWiFi();
         delay(3000);
         return;
     }
-    if (loop_count % 10 == 0) {
-        setupWiFi();
-        loop_count = 0;
+    WiFiClient ap_client;
+    Serial.println("Attempting to connect to ap server (port 80):");
+    // connect to server
+    if (ap_client.connect(gateway, 80)) {
+        Serial.println("Established client connection to ap server:");
     }
-    // if we do not have a current connection with the server
-    if (!client.connected()) {
-        Serial.println("Attempting to connect to server");
-        // connect to server
-        if (client.connect(server, 80)) {
-            Serial.println("Established connection to server\n");
-        }
-    }
-    // else client is already connected
     else {
-        // Make HTTP request
-        Serial.print("Sending request to server: ");
-        if (loop_count % 2 == 1) {
-            Serial.println(req_on);
-            client.println(req_on);
-            client.println();
-        }
-        else {
-            Serial.println(req_off);
-            client.println(req_off);
-            client.println();
-        }
+        Serial.println("Connection to ap server failed, retrying:");
+        return;
     }
-    
-    // if client is still connected OR we have a response buffered
-    if (client.connected()) {
-        // if response recieved, print it
+    // Make HTTP request
+    Serial.print("Sending http request to ap server: ");
+    if (led_status == 0) {
+        Serial.println(req_on);
+        ap_client.println(req_on);
+        ap_client.println();
+        led_status = 1;
+    }
+    else {
+        Serial.println(req_off);
+        ap_client.println(req_off);
+        ap_client.println();
+        led_status = 0;
+    }
+    delay(1000);
+
+    int timeout = 500;
+    int count = 0;
+    while (ap_client.available() == 0 && count < timeout) { 
+        count++;
+        delay(1);
+    }
+    if (ap_client.available() > 0) {
+        Serial.println("Response recieved from ap server: ");
         int i = 0;
-        while(client.available() > 0) {
-            char r = (char) client.read();
+        while(ap_client.available() > 0) {
+            char r = (char) ap_client.read();
             buf[i] = r;
             i++;
         }
-        client.flush();
+        buf[i] = '\0';
+        ap_client.flush();
         Serial.println(buf);
         strcpy(buf, "");
     }
-    else {
-        Serial.println("Terminating connection to server\n");
-        client.stop();
-    }
-    
-    loop_count++;
-    delay(2500);
+    Serial.println("Terminating connection to server\n");
 }
 
 void setupWiFi()
 {
-  Serial.println("\n");
   Serial.print("This device's MAC address is: ");
   Serial.println(WiFi.macAddress());
-  IPAddress ip(6,6,6,2);
-  IPAddress gateway(6,6,6,1); 
-  IPAddress subnet(255,255,255,0); 
-  WiFi.mode(WIFI_STA);
-  WiFi.config(ip, gateway, subnet);
-  WiFi.begin(ssid, password);
 
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  WiFi.config(ip, gateway, subnet);
+
+  int linenum = 10, attempt = 1;
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      Serial.print(".");
+      if (attempt % linenum == 0) {
+          Serial.println(".");
+      }
+      else {
+          Serial.print(".");
+      }
+      attempt++;
   }
   wifiStatus = WiFi.status();
   if(wifiStatus == WL_CONNECTED){
-      Serial.println("");
-      Serial.print("Connected - Your IP address is: ");
+      Serial.print("\nConnected - Your IP address is: ");
       Serial.println(WiFi.localIP());  
   }
- 
 }
 
 void initHardware()
 {
   Serial.begin(115200);
+  Serial.println();
   pinMode(DIGITAL_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT); 
   digitalWrite(LED_PIN, HIGH);//on Lolin ESP8266 v3 dev boards, the led is active low

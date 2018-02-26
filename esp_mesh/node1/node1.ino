@@ -4,12 +4,19 @@
 // WiFi Definitions //
 //////////////////////
 // this esp's ap credentials
-const char AP_NAME[] = "uosec";
+const char AP_NAME[] = "espnode";
 const char WiFiAPPSK[] = "security123";
-// other esp ep credentials
-const char *ssid = "uosec2";
+// other esp ap credentials
+const char *ssid = "espnode2";
 const char *password = "security123";
 
+int wifiStatus;
+IPAddress ip(6,6,6,1);                // this node's ap ip
+IPAddress gateway(6,6,6,1);           // this node's ap default router
+IPAddress sta_ip(6,6,6,130);          // this node's station ip
+IPAddress sta_gateway(6,6,6,129);     // this node's station default router
+IPAddress subnet(255,255,255,128);    // subnet mask, this node's ap subnet addres: 6.6.6.0, broadcast: 6.6.6.127
+WiFiServer server(80); 
 
 /////////////////////
 // Pin Definitions //
@@ -17,9 +24,6 @@ const char *password = "security123";
 const int LED_PIN = D4; // ESP's onboard, green LED
 const int ANALOG_PIN = A0; // The only analog pin on the ESP
 const int DIGITAL_PIN = D3; // Digital pin to be read
-
-WiFiServer server(80);
-int wifiStatus;
 
 void setup() 
 {
@@ -93,39 +97,39 @@ void loop()
 
 void setupWiFi()
 {
-  Serial.println("\n");
   Serial.print("This device's MAC address is: ");
   Serial.println(WiFi.macAddress());
-  //Serial.println(WiFi.softAPmacAddress());
-  IPAddress ip(6,6,6,1);
-  IPAddress gateway(6,6,6,1); 
-  IPAddress subnet(255,255,255,0); 
-  //WiFi.mode(WIFI_AP_STA);
+
   WiFi.softAPConfig(ip, gateway, subnet);
   WiFi.softAP(AP_NAME, WiFiAPPSK, 6, 0);
-  Serial.println("");
   Serial.print("This AP's IP address is: ");
   Serial.println(WiFi.softAPIP());  
-  WiFi.begin(ssid, password);
-  WiFi.config(ip, gateway, subnet);
 
+  WiFi.begin(ssid, password);
+  WiFi.config(sta_ip, sta_gateway, subnet);
+
+  int linenum = 10, attempt = 1;
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      Serial.print(".");
+      if (attempt % linenum == 0) {
+          Serial.println(".");
+      }
+      else {
+          Serial.print(".");
+      }
+      attempt++;
   }
   wifiStatus = WiFi.status();
   if(wifiStatus == WL_CONNECTED){
-      Serial.println("");
-      Serial.print("Connected - Your IP address is: ");
+      Serial.print("\nConnected - Your IP address is: ");
       Serial.println(WiFi.localIP());  
   }
- 
-
 }
 
 void initHardware()
 {
   Serial.begin(115200);
+  Serial.println();
   pinMode(DIGITAL_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT); 
   digitalWrite(LED_PIN, HIGH);//on Lolin ESP8266 v3 dev boards, the led is active low

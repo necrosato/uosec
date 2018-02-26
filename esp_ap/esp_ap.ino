@@ -3,8 +3,15 @@
 //////////////////////
 // WiFi Definitions //
 //////////////////////
-const char AP_NAME[] = "uosec";
+// this esp's ap credentials
+const char AP_NAME[] = "espnode";
 const char WiFiAPPSK[] = "security123";
+
+int wifiStatus;
+IPAddress ip(6,6,6,1);      // this node's soft ap ip address
+IPAddress gateway(6,6,6,1); // this node's soft ap gateway
+IPAddress subnet(255,255,255,0); // this node's soft ap subnet mask
+WiFiServer server(80);
 
 /////////////////////
 // Pin Definitions //
@@ -12,8 +19,6 @@ const char WiFiAPPSK[] = "security123";
 const int LED_PIN = D4; // ESP's onboard, green LED
 const int ANALOG_PIN = A0; // The only analog pin on the ESP
 const int DIGITAL_PIN = D3; // Digital pin to be read
-
-WiFiServer server(80);
 
 void setup() 
 {
@@ -87,18 +92,12 @@ void loop()
 
 void setupWiFi()
 {
-  int wifiStatus;
-  Serial.println("\n");
   Serial.print("This device's MAC address is: ");
   Serial.println(WiFi.softAPmacAddress());
+
   WiFi.mode(WIFI_AP);
-  IPAddress ip(6,6,6,1);
-  IPAddress gateway(6,6,6,1); 
-  IPAddress subnet(255,255,255,0); 
   WiFi.softAPConfig(ip, gateway, subnet);
   WiFi.softAP(AP_NAME, WiFiAPPSK, 6, 0);
-  wifiStatus = WiFi.status();
-  Serial.println("");
   Serial.print("This AP's IP address is: ");
   Serial.println(WiFi.softAPIP());  
 }
@@ -106,6 +105,7 @@ void setupWiFi()
 void initHardware()
 {
   Serial.begin(115200);
+  Serial.println();
   pinMode(DIGITAL_PIN, INPUT_PULLUP);
   pinMode(LED_PIN, OUTPUT); 
   digitalWrite(LED_PIN, HIGH);//on Lolin ESP8266 v3 dev boards, the led is active low
