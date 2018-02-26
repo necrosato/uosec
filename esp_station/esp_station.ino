@@ -5,11 +5,11 @@
 //////////////////////
 // other esp ep credentials
 const char *ssid = "uosec";
-const char *password = "security";
+const char *password = "security123";
 
 // this esp's ap credentials
 const char AP_NAME[] = "uosec2";
-const char WiFiAPPSK[] = "security";
+const char WiFiAPPSK[] = "security123";
 
 /////////////////////
 // Pin Definitions //

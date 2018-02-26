@@ -3,13 +3,13 @@
 //////////////////////
 // WiFi Definitions //
 //////////////////////
-// other esp ep credentials
-const char *ssid = "uosec";
-const char *password = "security";
-
 // this esp's ap credentials
 const char AP_NAME[] = "uosec2";
-const char WiFiAPPSK[] = "security";
+const char WiFiAPPSK[] = "security123";
+// other esp ep credentials
+const char *ssid = "uosec";
+const char *password = "security123";
+
 
 /////////////////////
 // Pin Definitions //
@@ -36,15 +36,13 @@ void loop()
 {
     if (WiFi.status() != WL_CONNECTED) {
         Serial.println("lost connection to other esp, waiting for reconnection...");
+        //setupWiFi();
         delay(3000);
         return;
     }
-    /*
     if (loop_count % 10 == 0) {
-        setupWiFi();
         loop_count = 0;
     }
-    */
     // if we do not have a current connection with the server
     if (!client.connected()) {
         Serial.println("Attempting to connect to server");

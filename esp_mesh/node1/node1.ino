@@ -3,8 +3,13 @@
 //////////////////////
 // WiFi Definitions //
 //////////////////////
-const char WiFiAPPSK[] = "security";
+// this esp's ap credentials
 const char AP_NAME[] = "uosec";
+const char WiFiAPPSK[] = "security123";
+// other esp ep credentials
+const char *ssid = "uosec2";
+const char *password = "security123";
+
 
 /////////////////////
 // Pin Definitions //
@@ -14,6 +19,7 @@ const int ANALOG_PIN = A0; // The only analog pin on the ESP
 const int DIGITAL_PIN = D3; // Digital pin to be read
 
 WiFiServer server(80);
+int wifiStatus;
 
 void setup() 
 {
@@ -87,20 +93,34 @@ void loop()
 
 void setupWiFi()
 {
-  int wifiStatus;
   Serial.println("\n");
   Serial.print("This device's MAC address is: ");
-  Serial.println(WiFi.softAPmacAddress());
-  WiFi.mode(WIFI_AP);
+  Serial.println(WiFi.macAddress());
+  //Serial.println(WiFi.softAPmacAddress());
   IPAddress ip(6,6,6,1);
   IPAddress gateway(6,6,6,1); 
   IPAddress subnet(255,255,255,0); 
+  //WiFi.mode(WIFI_AP_STA);
   WiFi.softAPConfig(ip, gateway, subnet);
   WiFi.softAP(AP_NAME, WiFiAPPSK, 6, 0);
-  wifiStatus = WiFi.status();
   Serial.println("");
   Serial.print("This AP's IP address is: ");
   Serial.println(WiFi.softAPIP());  
+  WiFi.begin(ssid, password);
+  WiFi.config(ip, gateway, subnet);
+
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+  wifiStatus = WiFi.status();
+  if(wifiStatus == WL_CONNECTED){
+      Serial.println("");
+      Serial.print("Connected - Your IP address is: ");
+      Serial.println(WiFi.localIP());  
+  }
+ 
+
 }
 
 void initHardware()

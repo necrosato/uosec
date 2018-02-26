@@ -3,8 +3,8 @@
 //////////////////////
 // WiFi Definitions //
 //////////////////////
-const char WiFiAPPSK[] = "security";
 const char AP_NAME[] = "uosec";
+const char WiFiAPPSK[] = "security123";
 
 /////////////////////
 // Pin Definitions //
