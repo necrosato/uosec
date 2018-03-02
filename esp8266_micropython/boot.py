@@ -13,4 +13,5 @@ st_if = network.WLAN(network.STA_IF)
 ap_if = network.WLAN(network.AP_IF)
 
 ap_if.ifconfig(('6.6.6.1', '255.255.255.128', '6.6.6.1', '8.8.8.8'))
+ap_if.config(essid='esp_mpc')
 
