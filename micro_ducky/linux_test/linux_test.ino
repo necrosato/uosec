@@ -29,8 +29,13 @@ void setup()
   Keyboard.press('t');
   Keyboard.releaseAll();
 
+  delay(1000);
   Keyboard.print("echo \"hello world\"");
+  //delay(100);
 
+  typeKey(KEY_RETURN);
+  delay(100);
+  Keyboard.print("ls -al; pwd");
   typeKey(KEY_RETURN);
 
   // Ending stream
