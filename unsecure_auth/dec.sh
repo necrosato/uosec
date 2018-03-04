@@ -4,5 +4,7 @@ IN=${1}
 OUT="${IN%.*}"
 
 openssl enc -d -aes-256-cbc -in ${IN} -out "${OUT}" 
-rm ${IN}
+if [ $? -eq 0 ]; then
+    rm ${IN}
+fi
 
