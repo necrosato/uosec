@@ -14,12 +14,35 @@ void setup()
   Keyboard.begin();
   // trollface mac
   // By Naookie Sato
+/*
+  delay(100);
+  typeKey(KEY_RETURN);
+  delay(100);
+  typeKey(KEY_RETURN);
+  delay(100);
+  typeKey(KEY_RETURN);
+  delay(100);
+  typeKey(KEY_RETURN);
+  delay(100);
+  typeKey(KEY_RETURN);
+*/
+  delay(500);
+  typeKey(KEY_ESC);
+  delay(500);
+  typeKey(KEY_ESC);
+  delay(500);
+  typeKey(KEY_RETURN);
+  delay(500);
+  typeKey(KEY_ESC);
   delay(500);
   Keyboard.press(KEY_LEFT_GUI);
+  delay(100);
   Keyboard.press(' ');
+  delay(100);
   Keyboard.releaseAll();
   delay(100);
   Keyboard.print("terminal");
+  delay(100);
   typeKey(KEY_RETURN);
   delay(500);
   Keyboard.print("wget -P ~/Desktop/ http://i0.kym-cdn.com/photos/images/newsfeed/000/096/044/trollface.jpg");
