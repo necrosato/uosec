@@ -1,0 +1,10 @@
+to start radare2 dissasembler on an executable:
+
+    $ r2 <path>
+
+v: go into the file
+
+pdf: print dissasembly function
+> pdf
+
+
